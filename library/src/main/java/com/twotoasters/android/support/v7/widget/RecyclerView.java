@@ -1570,6 +1570,15 @@ public class RecyclerView extends ViewGroup {
         mState.mDeletedInvisibleItemCountSincePreviousLayout = 0;
     }
 
+    public void animateAppearance(ViewHolder itemHolder) {
+
+       Rect appearingViewInitialBounds = new Rect(itemHolder.itemView.getLeft(), itemHolder.itemView.getTop(),
+               itemHolder.itemView.getRight(), itemHolder.itemView.getBottom());
+
+               animateAppearance(itemHolder, appearingViewInitialBounds, itemHolder.itemView.getLeft(), itemHolder.itemView.getTop());
+
+    }
+
     private void animateAppearance(ViewHolder itemHolder, Rect beforeBounds, int afterLeft,
             int afterTop) {
         View newItemView = itemHolder.itemView;

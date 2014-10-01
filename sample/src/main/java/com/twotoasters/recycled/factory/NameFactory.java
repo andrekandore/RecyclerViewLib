@@ -16,7 +16,7 @@ public final class NameFactory {
 
     public static ArrayList<Item> getListOfNames() {
         ArrayList<Item> list = new ArrayList<Item>();
-        for (String name : ANDROID_NAMES) {
+        for (String name : TWO_TOASTERS_NAMES) {
             list.add(new Item(name));
         }
         return list;

@@ -89,7 +89,7 @@ public class RecycleActivity extends Activity {
 
     private NameAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new NameAdapter(mNames);
+            mAdapter = new NameAdapter(mNames,mRecyclerView);
         }
         return mAdapter;
     }
@@ -125,6 +125,9 @@ public class RecycleActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
+        ItemAnimator mItemAnimator = new com.twotoasters.android.support.v7.widget.DefaultItemAnimator();
+
         int id = item.getItemId();
         switch (id) {
             case R.id.action_add:

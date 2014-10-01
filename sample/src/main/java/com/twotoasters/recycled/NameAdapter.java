@@ -1,6 +1,9 @@
 package com.twotoasters.recycled;
 
 
+import android.graphics.Rect;
+import android.support.v4.view.ViewCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,8 +16,14 @@ import java.util.Random;
 
 public class NameAdapter extends RecyclerView.Adapter<NameViewHolder> {
     private List<Item> mNames;
-
+    private RecyclerView mRecyclerView;
     public NameAdapter(List<Item> names) {
+        this.mNames = names;
+    }
+    RecyclerView.ItemAnimator mEntranceItemAnimator = new com.twotoasters.android.support.v7.widget.DefaultItemAnimator();
+
+    public NameAdapter(List<Item> names,RecyclerView mRecyclerView) {
+        this.mRecyclerView = mRecyclerView;
         this.mNames = names;
     }
 
@@ -55,7 +64,44 @@ public class NameAdapter extends RecyclerView.Adapter<NameViewHolder> {
                 removeItemFromList(name);
             }
         });
+
+        if (null != this.mRecyclerView) {
+         //   this.mRecyclerView.animateAppearance(viewHolder);
+        }
     }
+
+    private void animateAppearance(RecyclerView.ViewHolder itemHolder, Rect beforeBounds, int afterLeft, int afterTop) {
+        View newItemView = itemHolder.itemView;
+
+        if (beforeBounds != null && (beforeBounds.left != afterLeft || beforeBounds.top != afterTop)) {
+
+            itemHolder.setIsRecyclable(false);
+            if (mEntranceItemAnimator.animateMove(itemHolder,
+                    beforeBounds.left, beforeBounds.top,
+                    afterLeft, afterTop)) {
+                postAnimationRunner(itemHolder.itemView);
+            }
+        } else {
+
+            itemHolder.setIsRecyclable(false);
+            if (mEntranceItemAnimator.animateAdd(itemHolder)) {
+                postAnimationRunner(itemHolder.itemView);
+            }
+        }
+    }
+
+    private void postAnimationRunner(View recyclerView) {
+          ViewCompat.postOnAnimation(recyclerView, mItemAnimatorRunner);
+    }
+
+    private Runnable mItemAnimatorRunner = new Runnable() {
+        @Override
+        public void run() {
+            if (mEntranceItemAnimator != null) {
+                mEntranceItemAnimator.runPendingAnimations();
+            }
+        }
+    };
 
     @Override
     public int getItemCount() {

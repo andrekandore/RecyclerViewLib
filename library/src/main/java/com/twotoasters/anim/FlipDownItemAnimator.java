@@ -22,10 +22,11 @@ public class FlipDownItemAnimator extends PendingItemAnimator {
     @Override
     protected ViewPropertyAnimatorCompat animateRemoveImpl(ViewHolder holder) {
         return ViewCompat.animate(holder.itemView)
-                .rotationY(90)
+                .rotationY(180)
                 .translationX( - (holder.itemView.getMeasuredWidth() / 4))
                 .scaleX(0.5F)
                 .scaleY(0.5F)
+                .setStartDelay(1000)
                 .setInterpolator(new AccelerateInterpolator());
     }
 
