@@ -3,7 +3,6 @@ package com.twotoasters.recycled;
 
 import android.graphics.Rect;
 import android.support.v4.view.ViewCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,12 +16,14 @@ import java.util.Random;
 public class NameAdapter extends RecyclerView.Adapter<NameViewHolder> {
     private List<Item> mNames;
     private RecyclerView mRecyclerView;
+    private RecycleActivity mRecycleActivity;
     public NameAdapter(List<Item> names) {
         this.mNames = names;
     }
     RecyclerView.ItemAnimator mEntranceItemAnimator = new com.twotoasters.android.support.v7.widget.DefaultItemAnimator();
 
-    public NameAdapter(List<Item> names,RecyclerView mRecyclerView) {
+    public NameAdapter(List<Item> names,RecyclerView mRecyclerView,RecycleActivity recycleActivity) {
+        this.mRecycleActivity = recycleActivity;
         this.mRecyclerView = mRecyclerView;
         this.mNames = names;
     }
@@ -55,6 +56,22 @@ public class NameAdapter extends RecyclerView.Adapter<NameViewHolder> {
     }
 
     @Override
+    public void onViewRecycled(NameViewHolder holder) {
+        super.onViewRecycled(holder);
+    }
+
+    @Override
+    public void onViewAttachedToWindow(NameViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        this.animateAppearance(holder, new Rect(holder.itemView.getLeft(),holder.itemView.getTop(),holder.itemView.getRight(),holder.itemView.getBottom()), holder.itemView.getLeft(), holder.itemView.getTop(),this.mRecycleActivity.currentItemAnimator());
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(NameViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+    }
+
+    @Override
     public void onBindViewHolder(NameViewHolder viewHolder, final int position) {
         final Item name = mNames.get(position);
         viewHolder.textView.setText(name.toString());
@@ -70,38 +87,41 @@ public class NameAdapter extends RecyclerView.Adapter<NameViewHolder> {
         }
     }
 
-    private void animateAppearance(RecyclerView.ViewHolder itemHolder, Rect beforeBounds, int afterLeft, int afterTop) {
+    private void animateAppearance(RecyclerView.ViewHolder itemHolder, Rect beforeBounds, int afterLeft, int afterTop,final RecyclerView.ItemAnimator itemAnimator) {
         View newItemView = itemHolder.itemView;
 
         if (beforeBounds != null && (beforeBounds.left != afterLeft || beforeBounds.top != afterTop)) {
 
             itemHolder.setIsRecyclable(false);
-            if (mEntranceItemAnimator.animateMove(itemHolder,
+            if (itemAnimator.animateMove(itemHolder,
                     beforeBounds.left, beforeBounds.top,
                     afterLeft, afterTop)) {
-                postAnimationRunner(itemHolder.itemView);
+                postAnimationRunner(itemHolder.itemView,itemAnimator);
             }
         } else {
 
             itemHolder.setIsRecyclable(false);
-            if (mEntranceItemAnimator.animateAdd(itemHolder)) {
-                postAnimationRunner(itemHolder.itemView);
+            if (itemAnimator.animateAdd(itemHolder)) {
+                postAnimationRunner(itemHolder.itemView,itemAnimator);
             }
         }
     }
 
-    private void postAnimationRunner(View recyclerView) {
-          ViewCompat.postOnAnimation(recyclerView, mItemAnimatorRunner);
+    private void postAnimationRunner(View recyclerView,final RecyclerView.ItemAnimator itemAnimator) {
+          ViewCompat.postOnAnimation(recyclerView, itemAnimatorRunner(itemAnimator));
     }
 
-    private Runnable mItemAnimatorRunner = new Runnable() {
-        @Override
-        public void run() {
-            if (mEntranceItemAnimator != null) {
-                mEntranceItemAnimator.runPendingAnimations();
+    private Runnable itemAnimatorRunner(final RecyclerView.ItemAnimator itemAnimator) {
+
+        return new Runnable() {
+            @Override
+            public void run() {
+                if (itemAnimator != null) {
+                    itemAnimator.runPendingAnimations();
+                }
             }
-        }
-    };
+        };
+    }
 
     @Override
     public int getItemCount() {

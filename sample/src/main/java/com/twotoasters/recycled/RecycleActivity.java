@@ -89,7 +89,7 @@ public class RecycleActivity extends Activity {
 
     private NameAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new NameAdapter(mNames,mRecyclerView);
+            mAdapter = new NameAdapter(mNames,mRecyclerView,this);
         }
         return mAdapter;
     }
@@ -141,6 +141,11 @@ public class RecycleActivity extends Activity {
 
     private boolean isInAnimationArray(int id) {
         return id >= 0 && id < mAnimationArray.length;
+    }
+
+    public ItemAnimator currentItemAnimator() {
+        ItemAnimator itemAnimator = ItemAnimationFactory.getAnimator(mAnimationIndex);
+        return itemAnimator;
     }
 
     private boolean changeAnimation(int index) {
