@@ -891,7 +891,9 @@ public class LinearLayoutManager extends RecyclerView.LayoutManager {
             }
             return;
         }
-        final int limit = mOrientationHelper.getStartAfterPadding() + dt;
+
+        final int padding = this.getPaddingTop();
+        final int limit = mOrientationHelper.getStartAfterPadding() + dt - padding;
         final int childCount = getChildCount();
         if (mShouldReverseLayout) {
             for (int i = childCount - 1; i >= 0; i--) {
@@ -930,7 +932,9 @@ public class LinearLayoutManager extends RecyclerView.LayoutManager {
             }
             return;
         }
-        final int limit = mOrientationHelper.getEndAfterPadding() - dt;
+
+        final int padding = this.getPaddingBottom();
+        final int limit = mOrientationHelper.getEndAfterPadding() - dt + padding;
         if (mShouldReverseLayout) {
             for (int i = 0; i < childCount; i++) {
                 View child = getChildAt(i);
@@ -994,7 +998,10 @@ public class LinearLayoutManager extends RecyclerView.LayoutManager {
             }
             recycleByRenderState(recycler, renderState);
         }
-        int remainingSpace = renderState.mAvailable + renderState.mExtra;
+
+        final int paddingTop = this.getPaddingTop();
+        final int paddingBottom = this.getPaddingBottom();
+        int remainingSpace = renderState.mAvailable + renderState.mExtra + paddingTop + paddingBottom;
         while (remainingSpace > 0 && renderState.hasMore(state)) {
             View view = renderState.next(recycler);
             if (view == null) {
