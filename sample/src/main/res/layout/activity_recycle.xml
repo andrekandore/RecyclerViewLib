@@ -6,7 +6,7 @@
     android:background="#e7e7e7"
     tools:context=".RecycleActivity"
     android:paddingTop="?android:attr/actionBarSize"
-    android:paddingBottom="200dp"
+    android:paddingBottom="0dp"
     android:clipToPadding="false"
     android:clipChildren="false"
     />
