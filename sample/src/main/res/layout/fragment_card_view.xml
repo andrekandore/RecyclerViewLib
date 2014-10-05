@@ -17,11 +17,11 @@
         android:background="#F3F3F4"
         tools:context=".RecycleActivity"
         android:paddingTop="96dp"
-        android:layout_marginBottom="-96dp"
+        android:paddingBottom="104dp"
         android:paddingRight="@dimen/card_horizontal_margin"
         android:clipToPadding="false"
         android:clipChildren="false"
-        android:layout_weight="2"
+        android:layout_weight="1"
         />
 
 </LinearLayout>

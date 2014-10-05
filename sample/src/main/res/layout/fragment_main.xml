@@ -16,6 +16,7 @@
         android:background="@android:color/white"
         android:clipToPadding="false"
         android:clipChildren="false"
+        android:layout_marginBottom="-96dp"
         />
 
     <com.andrekandore.sliding.tab.common.view.SlidingTabLayout
