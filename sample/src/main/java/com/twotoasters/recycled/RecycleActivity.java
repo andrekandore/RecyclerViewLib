@@ -1,7 +1,10 @@
 package com.twotoasters.recycled;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,17 +23,12 @@ import com.twotoasters.recycled.factory.NameFactory;
 import java.util.ArrayList;
 
 
-public class RecycleActivity extends Activity {
+public class RecycleActivity extends FragmentActivity {
 
-    private static final String KEY_NAMES = "names";
-    private static final String KEY_ANIMATION_INDEX = "animationIndex";
-    private static final String KEY_LAYOUT_GRID = "layoutManager";
+    public static final String KEY_ANIMATION_INDEX = "animationIndex";
+    public static final String KEY_LAYOUT_GRID = "layoutManager";
 
-    private ArrayList<Item> mNames = NameFactory.getListOfNames();
     private int mAnimationIndex = 0;
-
-    private NameAdapter mAdapter;
-    private RecyclerView mRecyclerView;
 
     private String[] mAnimationArray;
 
@@ -39,59 +37,34 @@ public class RecycleActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_recycle);
-        mRecyclerView = findWidgetById(R.id.recyclerview);
-        restoreState(savedInstanceState);
 
         mAnimationArray = getResources().getStringArray(R.array.animations);
-        changeAnimation(mAnimationIndex);
 
-        mRecyclerView.setAdapter(getAdapter());
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        SlidingTabsBasicFragment fragment = new SlidingTabsBasicFragment();
+        transaction.replace(R.id.sample_content_fragment, fragment);
+        transaction.commit();
+
     }
 
-    private void setLayoutManager(boolean shouldBeGrid) {
-        if (mRecyclerView != null) {
-            mRecyclerView.getItemAnimator().endAnimations();
-            if (shouldBeGrid) {
-                mRecyclerView.setLayoutManager(new GridLayoutManager(RecycleActivity.this));
-            } else {
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(RecycleActivity.this));
-            }
-            // The recycle pool has to be cleared after the layout manager is changed.
-            mRecyclerView.getRecycledViewPool().clear();
-        }
-    }
 
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            mNames = (ArrayList<Item>) savedInstanceState.getSerializable(KEY_NAMES);
             mAnimationIndex = savedInstanceState.getInt(KEY_ANIMATION_INDEX);
-            setLayoutManager(savedInstanceState.getBoolean(KEY_LAYOUT_GRID, false));
         } else {
             Toast.makeText(this, R.string.tap_to_remove, Toast.LENGTH_LONG).show();
-            setLayoutManager(false);
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(KEY_NAMES, mNames);
         outState.putInt(KEY_ANIMATION_INDEX, mAnimationIndex);
-        if (mRecyclerView != null) {
-            outState.putBoolean(KEY_LAYOUT_GRID, mRecyclerView.getLayoutManager() instanceof GridLayoutManager);
-        }
-
         super.onSaveInstanceState(outState);
     }
 
     public <T extends View> T findWidgetById(int resId) {
         return (T) findViewById(resId);
-    }
-
-    private NameAdapter getAdapter() {
-        if (mAdapter == null) {
-            mAdapter = new NameAdapter(mNames,mRecyclerView,this);
-        }
-        return mAdapter;
     }
 
     @Override
@@ -115,14 +88,14 @@ public class RecycleActivity extends Activity {
         switcher.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                setLayoutManager(checked);
+//                setLayoutManager(checked);
             }
         });
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
+        // Handle action bar card clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
@@ -131,7 +104,7 @@ public class RecycleActivity extends Activity {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_add:
-                getAdapter().addToList(NameFactory.getRandomName());
+//                getAdapter().addToList(NameFactory.getRandomName());
                 return true;
             default:
                 if (changeAnimation(id)) return true;
@@ -154,7 +127,7 @@ public class RecycleActivity extends Activity {
         mAnimationIndex = index;
         ItemAnimator itemAnimator = ItemAnimationFactory.getAnimator(index);
 
-        mRecyclerView.setItemAnimator(itemAnimator);
+//        mRecyclerView.setItemAnimator(itemAnimator);
         getActionBar().setTitle(mAnimationArray[index]);
         return true;
     }

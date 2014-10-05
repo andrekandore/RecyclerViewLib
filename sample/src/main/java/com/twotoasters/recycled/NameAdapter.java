@@ -51,7 +51,7 @@ public class NameAdapter extends RecyclerView.Adapter<NameViewHolder> {
     @Override
     public NameViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.item, parent, false);
+        View view = inflater.inflate(R.layout.card, parent, false);
         return new NameViewHolder(view);
     }
 

@@ -5,8 +5,8 @@ android {
     buildToolsVersion "20.0.0"
 
     defaultConfig {
-        applicationId "com.twotoasters"
-        minSdkVersion 7
+        applicationId "com.andrekandore.sliding.tab"
+        minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -25,8 +25,6 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:21.0.0+'
+    compile "com.android.support:support-v4:21.0.0+"
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
-
-apply from: 'https://raw.github.com/twotoasters/gradle-mvn-push/master/gradle-mvn-push.gradle'
